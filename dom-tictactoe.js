@@ -2,6 +2,8 @@
 //            INSTRUCTIONS
 //       ***********************
 
+// const { doc } = require("mocha/lib/reporters");
+
 // 1. Read the code below and figure out the data flow
 // 2. Add in your code from the terminal app (check for win logic)
 // 3. Look for the @TODO, to fix
@@ -14,6 +16,19 @@ let board = [
   ['','',''],
   ['','','']
 ];
+
+let counter = 0
+let currentTurn = document.getElementById('current-turn')
+currentTurn.innerText = counter
+let currentPlayer = document.getElementById('current-player')
+currentPlayer.innerText = currentMarker + " Player turn"
+let xPlayer = 0
+let oPlayer = 0
+let xPlayerWin = document.getElementById('x-playerWins')
+let oPlayerWin = document.getElementById('o-playerWins')
+xPlayerWin.innerText = "X Player" + xPlayer
+oPlayerWin.innerText = "O Player" + oPlayer
+
 
 // is called when a square is clicked. "this" = element here
 const handleClick = (element) => {
@@ -36,6 +51,9 @@ const addMarker = (id) => {
   // document
   // .innerHTML 
   document.getElementById(id).innerHTML = currentMarker;
+  counter++
+  currentTurn.innerText = counter
+  console.log("This is the current turn " + counter)
   // Arrange the above pieces into a single line of code
   // to add an X or O to the board to the DOM so it can be scene on the screen.
 }
@@ -45,7 +63,7 @@ const updateBoard = (id) => {
   // parses the id string into a number then captures the first and last part of the newly created number as row & column
   const row = parseInt(id.charAt(0))
   const column = parseInt(id.charAt(2)) 
-
+  
   console.log(`you clicked the sq at ${row} and ${column}`)
   console.log(board)
   board[row][column] = currentMarker;
@@ -56,6 +74,14 @@ const updateBoard = (id) => {
 const checkForWin = () => {
   // calls each checkForWin possibility and if any are true gives a page alert,
   if(horizontalWin() || verticalWin() || diagonalWin()) {
+    if(currentMarker === "X") {
+      xPlayer++
+      xPlayerWin.innerText = "X Player" + xPlayer
+    }
+    else {
+      oPlayer++
+      oPlayerWin.innerText = "O Player" + oPlayer
+    }
     // **BONUS** you could make the dismissal of this alert window reset the board...
     window.alert(`Player ${currentMarker} won!`)
     resetBoard()
@@ -69,10 +95,10 @@ const horizontalWin = () => {
   // @TODO, Your code here: to check for horizontal wins
   if ((board[0][0] == "X" && board[0][1] == "X" && board[0][2] == "X")
   || (board[0][0] == "O" && board[0][1] == "O" && board[0][2] == "O")
-
+  
   || (board[1][0] == "X" && board[1][1] == "X" && board[1][2] == "X")
   || (board[1][0] == "O" && board[1][1] == "O" && board[1][2] == "O")
-
+  
   || (board[2][0] == "X" && board[2][1] == "X" && board[2][2] == "X")
   || (board[2][0] == "O" && board[2][1] == "O" && board[2][2] == "O"))
   {
@@ -84,10 +110,10 @@ const verticalWin = () => {
   // @TODO, Your code here: to check for vertical wins
   if ((board[0][0] == "X" && board[1][0] == "X" && board[2][0] == "X")
   || (board[0][0] == "O" && board[1][0] == "O" && board[2][0] == "O")
-
+  
   || (board[0][1] == "X" && board[1][1] == "X" && board[2][1] == "X")
   || (board[0][1] == "O" && board[1][1] == "O" && board[2][1] == "O")
-
+  
   || (board[0][2] == "X" && board[1][2] == "X" && board[2][2] == "X")
   || (board[0][2] == "O" && board[1][2] == "O" && board[2][2] == "O"))
   {
@@ -99,7 +125,7 @@ const diagonalWin = () => {
   // @TODO, Your code here: to check for diagonal wins
   if ((board[0][0] == "X" && board[1][1] == "X" && board[2][2] == "X")
   || (board[0][0] == "O" && board[1][1] == "O" && board[2][2] == "O")
-
+  
   || (board[0][2] == "X" && board[1][1] == "X" && board[2][0] == "X")
   || (board[0][2] == "O" && board[1][1] == "O" && board[2][0] == "O"))
   {
@@ -111,12 +137,13 @@ const diagonalWin = () => {
 const changeMarker = () => {
   // ternary operator: if it's an X make it an O, if O make it an X
   currentMarker = currentMarker === "X" ? "O" : "X"
+  currentPlayer.innerText = currentMarker + "Player turn"
 }
 
 const resetBoard = () => {
   // sanity check: this tells us the function is being called
   console.log("the board was cleared!")
-
+  
   // collects all of the "td"s into an HTML Collection: https://www.w3schools.com/jsref/dom_obj_htmlcollection.asp  
   const squares = document.getElementsByTagName("TD")
   
@@ -125,7 +152,7 @@ const resetBoard = () => {
     console.log(squares[i])
     squares[i].innerHTML = null
   }
-
+  
   board = [
     ["", "", ""],
     ["", "", ""],
